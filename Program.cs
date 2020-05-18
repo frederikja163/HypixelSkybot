@@ -12,13 +12,9 @@ namespace HypixelSkybot
     {
         private static void Main(string[] args)
         {
-            using (var bot = new DiscordBot())
+            using (new DiscordBot())
             {
-                var profile = Hypixel.SkyblockProfile();
-                var timer = new Timer(30000);
-                timer.AutoReset = true;
-                timer.Elapsed += (sender, eventArgs) => { };
-                timer.Start();
+                HypixelSkybot.StartTimer();
                 Console.ReadKey();
             }
         }

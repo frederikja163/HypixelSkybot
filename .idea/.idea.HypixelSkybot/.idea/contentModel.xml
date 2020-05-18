@@ -5,20 +5,23 @@
     <e p="C:\Users\fjapl\.Rider2019.3\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\fjapl\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_HypixelSkybot.1486215916.00" t="ExcludeRecursive" />
     <e p="C:\Users\fjapl\Documents\projects\HypixelSkybot" t="IncludeRecursive">
+      <e p=".gitignore" t="Include" />
       <e p="bin" t="ExcludeRecursive" />
       <e p="DiscordBot.cs" t="Include" />
       <e p="Hypixel.cs" t="Include" />
+      <e p="HypixelSkybot.cs" t="Include" />
       <e p="HypixelSkybot.csproj" t="IncludeRecursive" />
       <e p="HypixelSkybot.sln" t="IncludeFlat" />
+      <e p="Minecraft.cs" t="Include" />
       <e p="obj" t="ExcludeRecursive">
-        <e p="Debug" t="Include">
+        <e p="Release" t="Include">
           <e p="netcoreapp3.1" t="Include">
             <e p="HypixelSkybot.AssemblyInfo.cs" t="Include" />
           </e>
         </e>
       </e>
       <e p="packages" t="ExcludeRecursive" />
-      <e p="Profile.cs" t="Include" />
+      <e p="ProfileUser.cs" t="Include" />
       <e p="Program.cs" t="Include" />
       <e p="Return.cs" t="Include" />
     </e>

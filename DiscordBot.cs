@@ -8,8 +8,8 @@ namespace HypixelSkybot
     public class DiscordBot : IDisposable
     {
         private DiscordSocketClient _bot;
-        private ISocketMessageChannel _channel;
-
+        private static ISocketMessageChannel _channel;
+        
         public DiscordBot()
         {
             _bot = new DiscordSocketClient();
@@ -24,11 +24,16 @@ namespace HypixelSkybot
                     _channel = new SocketCommandContext(_bot, message as SocketUserMessage).Channel;
                     SendMessage("Bot initiated for this channel.");
                 }
+                else if (message.Content == "stop")
+                {
+                    Dispose();
+                    Environment.Exit(1);
+                }
                 return null;
             };
         }
 
-        public void SendMessage(string message)
+        public static void SendMessage(string message)
         {
             _channel?.SendMessageAsync(message);
         }
