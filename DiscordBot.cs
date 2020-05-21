@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -8,34 +11,52 @@ namespace HypixelSkybot
     public class DiscordBot : IDisposable
     {
         private DiscordSocketClient _bot;
-        private static ISocketMessageChannel _channel;
+        private Dictionary<string, Command> _commands = new Dictionary<string, Command>();
+        private delegate void Command(ISocketMessageChannel channel, string[] args);
         
-        public DiscordBot()
+        public DiscordBot(string token)
         {
             _bot = new DiscordSocketClient();
             
-            _bot.LoginAsync(TokenType.Bot, "NzA4MzM0NjE5MDQ0NDc5MDM4.XrV5ew._I-6FO090D4LXKou-w7dmkZJiPw");
+            _bot.LoginAsync(TokenType.Bot, token);
             _bot.StartAsync();
 
-            _bot.MessageReceived += message =>
+            _bot.MessageReceived += msg =>
             {
-                if (message.Content == "start")
-                {
-                    _channel = new SocketCommandContext(_bot, message as SocketUserMessage).Channel;
-                    SendMessage("Bot initiated for this channel.");
-                }
-                else if (message.Content == "stop")
-                {
-                    Dispose();
-                    Environment.Exit(1);
-                }
-                return null;
+                OnMessageReceivedAsync(msg);
+                return Task.CompletedTask;
             };
-        }
 
-        public static void SendMessage(string message)
+            var commands = typeof(Commands).GetMethods();
+            foreach (var c in commands)
+            {
+                var d = (Command)Delegate.CreateDelegate(typeof(Command), c, false);
+                if (d != null)
+                {
+                    _commands.TryAdd(c.Name.ToLower(), d);
+                }
+            }
+        }
+        
+        private void OnMessageReceivedAsync(SocketMessage msg)
         {
-            _channel?.SendMessageAsync(message);
+            if (!msg.Content.StartsWith('!'))
+            {
+                return;
+            }
+
+            var comStr = msg.Content;
+            var argPos = comStr.IndexOf(' ');
+            var com = comStr.Substring(1, (argPos == -1 ? comStr.Length : argPos) - 1);
+            if (_commands.TryGetValue(com.ToLower(), out var c))
+            {
+                var args = comStr.Substring(argPos + 1).Split(' ');
+                c.Invoke(msg.Channel, args);
+            }
+            else
+            {
+                msg.Channel.SendMessageAsync("Command does not exist.");
+            }
         }
         
         public void Dispose()

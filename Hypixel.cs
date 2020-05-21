@@ -8,12 +8,20 @@ namespace HypixelSkybot
     public static class Hypixel
     {
         private const string ApiLink = "https://api.hypixel.net";
-        private const string ApiKey = "a106c7f4-555a-4ddc-bdc4-7875ab6e023b";
-        public static Return SkyblockProfile(string profileId)
+        public static string ApiKey;
+        
+        public static JObject SkyblockProfile(string profileId)
         {
             var str = CallMethod("skyblock/profile", "profile", profileId);
-            var profile = JsonConvert.DeserializeObject<Return>(str);
-            return profile;
+            var obj = JObject.Parse(str);
+            return obj;
+        }
+
+        public static JObject Stats(string uuid)
+        {
+            var str = CallMethod("player", "uuid", uuid);
+            var obj = JObject.Parse(str);
+            return obj;
         }
         
         private static string CallMethod(string function, string paramName = "", string paramValue = "")

@@ -1,39 +1,71 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Timers;
+using Discord.WebSocket;
+using HypixelSkybot.Extensions;
+using HypixelSkybot.SkyblockProfileReturn;
+using Newtonsoft.Json.Linq;
 
 namespace HypixelSkybot
 {
-    public static class HypixelSkybot
+    public class HypixelSkybot : IEnumerable<ProfileUser>
     {
         private static Timer _timer;
-        private static readonly List<ProfileUser> _users = new List<ProfileUser>();
+        private string _skyblockId;
+        private ISocketMessageChannel _channel;
+        private readonly List<ProfileUser> _users = new List<ProfileUser>();
+        private static readonly Dictionary<ISocketMessageChannel, HypixelSkybot> _skybots = new Dictionary<ISocketMessageChannel, HypixelSkybot>();
         
-        public static void StartTimer(string skyblockId)
+        public HypixelSkybot(ISocketMessageChannel channel, JToken user)
         {
+            _channel = channel;
+            _skyblockId = user["profile_id"].Value<string>();
             _timer = new Timer(30000);
             _timer.AutoReset = true;
             _timer.Elapsed += (sender, eventArgs) => TimerTick();
             _timer.Start();
 
-            var profile = Hypixel.SkyblockProfile("b99305ae64c24754a8328d09fad3c83b");
-            foreach (var (uuid, member) in profile.Profile.Members)
+            var profile = Hypixel.SkyblockProfile(_skyblockId);
+            foreach (var member in profile["profile"]["members"])
             {
+                var uuid = member.Name();
                 var username = Minecraft.UuidToUsername(uuid).Last().Name;
-                _users.Add(new ProfileUser(uuid, username));
+                _users.Add(new ProfileUser(_channel, uuid, username));
             }
             
             TimerTick();
         }
 
-        private static void TimerTick()
+        public static void Create(ISocketMessageChannel channel, JToken user)
         {
-            var profile = Hypixel.SkyblockProfile("b99305ae64c24754a8328d09fad3c83b");
-            foreach (var user in _users)
+            _skybots.TryAdd(channel, new HypixelSkybot(channel, user));
+        }
+
+        public static bool TryGet(ISocketMessageChannel channel, out HypixelSkybot skybot)
+        {
+            return _skybots.TryGetValue(channel, out skybot);
+        }
+
+        private void TimerTick()
+        {
+            var profile = Hypixel.SkyblockProfile(_skyblockId);
+            for (int i = 0; i < _users.Count; i++)
             {
-                var member = profile.Profile.Members[user.UserId];
-                user.Tick(member);
+                var member = profile["profile"]["members"][_users[i].UserId];
+                _users[i].Update(member);
             }
+        }
+
+        public IEnumerator<ProfileUser> GetEnumerator()
+        {
+            return _users.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace HypixelSkybot
+namespace HypixelSkybot.SkyblockProfileReturn
 {
-    public partial class Return
+    public class SkyblockProfileReturn
     {
         [JsonProperty("success", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Success { get; set; }
@@ -15,7 +15,7 @@ namespace HypixelSkybot
         public Profile Profile { get; set; }
     }
 
-    public partial class Banking
+    public class Banking
     {
         [JsonProperty("balance", NullValueHandling = NullValueHandling.Ignore)]
         public double? Balance { get; set; }
@@ -24,7 +24,7 @@ namespace HypixelSkybot
         public Transaction[] Transactions { get; set; }
     }
 
-    public partial class Transaction
+    public class Transaction
     {
         [JsonProperty("amount", NullValueHandling = NullValueHandling.Ignore)]
         public long? Amount { get; set; }
@@ -39,7 +39,7 @@ namespace HypixelSkybot
         public string InitiatorName { get; set; }
     }
 
-    public partial class Profile
+    public class Profile
     {
         [JsonProperty("profile_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ProfileId { get; set; }
@@ -51,7 +51,7 @@ namespace HypixelSkybot
         public Banking Banking { get; set; }
     }
 
-    public partial class Member
+    public class Member
     {
         [JsonProperty("last_save", NullValueHandling = NullValueHandling.Ignore)]
         public long? LastSave { get; set; }
@@ -147,7 +147,7 @@ namespace HypixelSkybot
         public double? ExperienceSkillCarpentry { get; set; }
     }
 
-    public partial class CoopInvitation
+    public class CoopInvitation
     {
         [JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
         public long? Timestamp { get; set; }
@@ -162,7 +162,7 @@ namespace HypixelSkybot
         public long? ConfirmedTimestamp { get; set; }
     }
 
-    public partial class FishingBag
+    public class FishingBag
     {
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public long? Type { get; set; }
@@ -171,7 +171,7 @@ namespace HypixelSkybot
         public string Data { get; set; }
     }
 
-    public partial class Objectives
+    public class Objectives
     {
         [JsonProperty("collect_log", NullValueHandling = NullValueHandling.Ignore)]
         public ChopTree CollectLog { get; set; }
@@ -510,7 +510,7 @@ namespace HypixelSkybot
         public ChopTree TalkToPetSitter { get; set; }
     }
 
-    public partial class ChopTree
+    public class ChopTree
     {
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public Status? Status { get; set; }
@@ -540,7 +540,7 @@ namespace HypixelSkybot
         public bool? Redstone { get; set; }
     }
 
-    public partial class CollectIngots
+    public class CollectIngots
     {
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public Status? Status { get; set; }
@@ -558,7 +558,7 @@ namespace HypixelSkybot
         public bool? IronIngot { get; set; }
     }
 
-    public partial class CollectNetherResources
+    public class CollectNetherResources
     {
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public Status? Status { get; set; }
@@ -576,7 +576,7 @@ namespace HypixelSkybot
         public bool? NetherStalk { get; set; }
     }
 
-    public partial class CollectSpider
+    public class CollectSpider
     {
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public Status? Status { get; set; }
@@ -594,7 +594,7 @@ namespace HypixelSkybot
         public bool? SpiderEye { get; set; }
     }
 
-    public partial class Pet
+    public class Pet
     {
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
@@ -615,7 +615,7 @@ namespace HypixelSkybot
         public long? CandyUsed { get; set; }
     }
 
-    public partial class Quest
+    public class Quest
     {
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public Status? Status { get; set; }
@@ -633,7 +633,7 @@ namespace HypixelSkybot
         public long? CompletedAtSb { get; set; }
     }
 
-    public partial class SlayerBosses
+    public class SlayerBosses
     {
         [JsonProperty("spider", NullValueHandling = NullValueHandling.Ignore)]
         public Spider Spider { get; set; }
@@ -645,7 +645,7 @@ namespace HypixelSkybot
         public Spider Zombie { get; set; }
     }
 
-    public partial class Spider
+    public class Spider
     {
         [JsonProperty("claimed_levels", NullValueHandling = NullValueHandling.Ignore)]
         public ClaimedLevels ClaimedLevels { get; set; }
@@ -663,7 +663,7 @@ namespace HypixelSkybot
         public long? BossKillsTier2 { get; set; }
     }
 
-    public partial class ClaimedLevels
+    public class ClaimedLevels
     {
         [JsonProperty("level_1", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Level1 { get; set; }
@@ -681,7 +681,7 @@ namespace HypixelSkybot
         public bool? Level5 { get; set; }
     }
 
-    public partial class SlayerQuest
+    public class SlayerQuest
     {
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
@@ -714,7 +714,7 @@ namespace HypixelSkybot
         public long? KillTimestamp { get; set; }
     }
 
-    public partial class RecentMobKill
+    public class RecentMobKill
     {
         [JsonProperty("xp", NullValueHandling = NullValueHandling.Ignore)]
         public double? Xp { get; set; }
