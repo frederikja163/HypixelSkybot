@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using HypixelSkybot.Extensions;
 
 namespace HypixelSkybot
 {
@@ -17,6 +18,7 @@ namespace HypixelSkybot
         public DiscordBot(string token)
         {
             _bot = new DiscordSocketClient();
+            _bot.ReactionAdded += BotOnReactionAdded;
             
             _bot.LoginAsync(TokenType.Bot, token);
             _bot.StartAsync();
@@ -37,10 +39,19 @@ namespace HypixelSkybot
                 }
             }
         }
-        
+
+        private Task BotOnReactionAdded(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
+        {
+            if (arg3.UserId != _bot.CurrentUser.Id)
+            {
+                ChannelExtension.DispatchReaction(arg1, arg2, arg3);
+            }
+            return Task.CompletedTask;
+        }
+
         private void OnMessageReceivedAsync(SocketMessage msg)
         {
-            if (!msg.Content.StartsWith('!'))
+            if (!msg.Content.StartsWith('.'))
             {
                 return;
             }

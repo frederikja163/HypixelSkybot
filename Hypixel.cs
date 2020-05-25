@@ -12,19 +12,15 @@ namespace HypixelSkybot
         
         public static JObject SkyblockProfile(string profileId)
         {
-            var str = CallMethod("skyblock/profile", "profile", profileId);
-            var obj = JObject.Parse(str);
-            return obj;
+            return CallMethod("skyblock/profile", "profile", profileId);
         }
 
-        public static JObject Stats(string uuid)
+        public static JObject Player(string uuid)
         {
-            var str = CallMethod("player", "uuid", uuid);
-            var obj = JObject.Parse(str);
-            return obj;
+            return CallMethod("player", "uuid", uuid);
         }
         
-        private static string CallMethod(string function, string paramName = "", string paramValue = "")
+        private static JObject CallMethod(string function, string paramName = "", string paramValue = "")
         {
             var param = paramName == "" ? "" : $"&{paramName}={paramValue}";
             var link = $"{ApiLink}/{function}?key={ApiKey}{param}";
@@ -33,7 +29,7 @@ namespace HypixelSkybot
             using (var stream = new StreamReader(req.GetResponse().GetResponseStream()))
             {
                 var response = stream.ReadToEnd();
-                return response;
+                return JObject.Parse(response);;
             }
         }
     }

@@ -1,11 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Timers;
 using Discord.WebSocket;
 using HypixelSkybot.Extensions;
-using HypixelSkybot.SkyblockProfileReturn;
 using Newtonsoft.Json.Linq;
 
 namespace HypixelSkybot
@@ -16,22 +13,26 @@ namespace HypixelSkybot
         private string _skyblockId;
         private ISocketMessageChannel _channel;
         private readonly List<ProfileUser> _users = new List<ProfileUser>();
-        private static readonly Dictionary<ISocketMessageChannel, HypixelSkybot> _skybots = new Dictionary<ISocketMessageChannel, HypixelSkybot>();
+        private static readonly Dictionary<ulong, HypixelSkybot> _skybots = new Dictionary<ulong, HypixelSkybot>();
         
         public HypixelSkybot(ISocketMessageChannel channel, JToken user)
         {
             _channel = channel;
             _skyblockId = user["profile_id"].Value<string>();
-            _timer = new Timer(30000);
-            _timer.AutoReset = true;
-            _timer.Elapsed += (sender, eventArgs) => TimerTick();
-            _timer.Start();
+            if (_timer == null)
+            {
+                
+                _timer = new Timer(30000);
+                _timer.AutoReset = true;
+                _timer.Elapsed += (sender, eventArgs) => TimerTick();
+                _timer.Start();
+            }
 
             var profile = Hypixel.SkyblockProfile(_skyblockId);
             foreach (var member in profile["profile"]["members"])
             {
                 var uuid = member.Name();
-                var username = Minecraft.UuidToUsername(uuid).Last().Name;
+                var username = Minecraft.UuidToUsername(uuid).Last["name"].Value<string>();
                 _users.Add(new ProfileUser(_channel, uuid, username));
             }
             
@@ -40,12 +41,17 @@ namespace HypixelSkybot
 
         public static void Create(ISocketMessageChannel channel, JToken user)
         {
-            _skybots.TryAdd(channel, new HypixelSkybot(channel, user));
+            _skybots.TryAdd(channel.Id, new HypixelSkybot(channel, user));
         }
 
         public static bool TryGet(ISocketMessageChannel channel, out HypixelSkybot skybot)
         {
-            return _skybots.TryGetValue(channel, out skybot);
+            return _skybots.TryGetValue(channel.Id, out skybot);
+        }
+
+        public static void Remove(ISocketMessageChannel channel)
+        {
+            _skybots.Remove(channel.Id);
         }
 
         private void TimerTick()
