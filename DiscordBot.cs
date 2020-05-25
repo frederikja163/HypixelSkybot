@@ -51,7 +51,7 @@ namespace HypixelSkybot
 
         private void OnMessageReceivedAsync(SocketMessage msg)
         {
-            if (!msg.Content.StartsWith('.'))
+            if (!msg.Content.StartsWith('!'))
             {
                 return;
             }
